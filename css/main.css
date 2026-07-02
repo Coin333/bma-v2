@@ -684,6 +684,26 @@ ul {
   text-align: center;
 }
 
+.statement-scene--pin {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.constellation .halo {
+  position: absolute;
+  inset: -80% -55%;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(95, 198, 220, 0.3) 0%,
+    rgba(95, 198, 220, 0) 70%
+  );
+  opacity: 0.12;
+  pointer-events: none;
+}
+
 .constellation {
   position: relative;
   width: min(420px, 60vw);

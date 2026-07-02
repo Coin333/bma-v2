@@ -308,6 +308,89 @@
     });
   }
 
+  /* ---------- what-we-build transition (pinned glow build, sky + cards rise) ---------- */
+
+  function initWwbScene() {
+    var scene = document.querySelector(".statement-scene--pin");
+    if (!scene || reduceMotion || isMobile) return;
+
+    var mark = scene.querySelector(".constellation img");
+    var halo = scene.querySelector(".constellation .halo");
+
+    // phase 1: pin the statement while the mark builds from faint to lit
+    var buildTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: scene,
+        start: "top top",
+        end: "+=100%",
+        pin: true,
+        scrub: true,
+      },
+    });
+    if (mark) {
+      buildTl.fromTo(
+        mark,
+        { opacity: 0.3, scale: 0.92, filter: "blur(3px) brightness(1)" },
+        {
+          opacity: 1,
+          scale: 1.1,
+          filter: "blur(0px) brightness(1.7)",
+          ease: "power1",
+        },
+        0,
+      );
+    }
+    if (halo) {
+      buildTl.fromTo(
+        halo,
+        { opacity: 0.12, scale: 0.7 },
+        { opacity: 1, scale: 1.4, ease: "power1" },
+        0,
+      );
+    }
+
+    // phase 2: sky section sweeps up; cards rise with a scrubbed staggered lag
+    var sky = document.querySelector(".sky");
+    if (!sky) return;
+    var skyImg = sky.querySelector(".sky-bg img");
+    if (skyImg) {
+      gsap.fromTo(
+        skyImg,
+        { scale: 1.18 },
+        {
+          scale: 1,
+          ease: "power1",
+          scrollTrigger: {
+            trigger: sky,
+            start: "top bottom",
+            end: "top top",
+            scrub: true,
+          },
+        },
+      );
+    }
+    if (window.innerWidth > 1023) {
+      var cards = sky.querySelectorAll(".sky-card");
+      if (cards.length) {
+        gsap.fromTo(
+          cards,
+          { y: "32vh" },
+          {
+            y: 0,
+            ease: "power1",
+            stagger: 0.15,
+            scrollTrigger: {
+              trigger: sky,
+              start: "top 92%",
+              end: "top 12%",
+              scrub: true,
+            },
+          },
+        );
+      }
+    }
+  }
+
   /* ---------- footer parallax ---------- */
 
   function initFooter() {
@@ -645,6 +728,7 @@
   function start() {
     boot();
     revealPage();
+    initWwbScene();
     initFooter();
     initMarquee();
     initAccordion();
